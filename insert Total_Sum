@@ -1,0 +1,13 @@
+-- 1. Сначала добавляем новый столбец
+ALTER TABLE model_testus_052025 
+ADD COLUMN Total_Sum DECIMAL(10, 2);
+
+-- 2. Затем вычисляем и заполняем значения
+UPDATE model_testus_052025 
+SET Total_Sum = COALESCE(Serv_zayvki, 0) + 
+                COALESCE(Srok_s_nami, 0) + 
+                COALESCE(Conkurent, 0) + 
+                COALESCE(Age, 0) + 
+                COALESCE(Student, 0) + 
+                COALESCE(Sezon_ottok, 0) + 
+                COALESCE(`Index`, 0);
