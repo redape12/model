@@ -1,0 +1,13 @@
+-- 1. Сначала добавляем столбец ottok
+ALTER TABLE model_testus_052025 
+ADD COLUMN ottok INTEGER DEFAULT 0;
+
+-- 2. Обновляем значения для найденных записей
+UPDATE model_testus_052025 AS m
+SET ottok = 1
+WHERE EXISTS (
+    SELECT 1 
+    FROM ottok1db AS o
+    WHERE o.title = m.title
+    AND o.update_at1 >= '2025-06-01'
+);
