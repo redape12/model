@@ -1,0 +1,168 @@
+CREATE TABLE AlexeyReport.model_testus_052025 AS
+WITH 
+today_aa1 AS (
+    SELECT DISTINCT title
+    FROM AlexeyReport.aa1 
+    WHERE update_at >= '2025-06-01'
+      AND update_at < '2025-06-01' + INTERVAL 1 DAY
+),
+paused_titles AS (
+    SELECT DISTINCT s2.title
+    FROM AlexeyReport.summary s2 
+    INNER JOIN today_aa1 t ON s2.title = t.title
+    WHERE s2.status = 'приостановлен'
+      AND MONTH('2025-06-01') BETWEEN 
+          MONTH(s2.status_date) 
+          AND 
+          MONTH(DATE_ADD(s2.status_date, INTERVAL s2.dney DAY))
+)
+SELECT 
+    round(CASE 
+        WHEN COUNT(s.ls) = 1 THEN 6
+        WHEN COUNT(s.ls) = 2 THEN 1
+        WHEN COUNT(s.ls) = 3 THEN 0.4
+        WHEN COUNT(s.ls) = 4 THEN 0.1
+        ELSE 0.1
+    END *1.17, 2) as 'Serv_zayvki',
+     
+    round(CASE 
+        -- Используем COALESCE для обработки NULL в dney
+        WHEN COALESCE(a.dney, 0) / 30.44 <= 1 THEN 7.1
+        WHEN COALESCE(a.dney, 0) / 30.44 <= 2 THEN 1.4
+        WHEN COALESCE(a.dney, 0) / 30.44 <= 3 THEN 1.3
+        WHEN COALESCE(a.dney, 0) / 30.44 <= 4 THEN 1.3
+        WHEN COALESCE(a.dney, 0) / 30.44 <= 5 THEN 1.1
+        WHEN COALESCE(a.dney, 0) / 30.44 <= 6 THEN 1.0
+        WHEN COALESCE(a.dney, 0) / 30.44 <= 7 THEN 1.1
+        WHEN COALESCE(a.dney, 0) / 30.44 <= 8 THEN 1.1
+        WHEN COALESCE(a.dney, 0) / 30.44 <= 9 THEN 0.8
+        WHEN COALESCE(a.dney, 0) / 30.44 <= 10 THEN 0.9
+        WHEN COALESCE(a.dney, 0) / 30.44 <= 11 THEN 0.9
+        WHEN COALESCE(a.dney, 0) / 30.44 <= 12 THEN 0.7
+        WHEN COALESCE(a.dney, 0) / 30.44 <= 18 THEN 11
+        WHEN COALESCE(a.dney, 0) / 30.44 <= 24 THEN 10
+        WHEN COALESCE(a.dney, 0) / 30.44 <= 30 THEN 8
+        WHEN COALESCE(a.dney, 0) / 30.44 <= 36 THEN 7
+        WHEN COALESCE(a.dney, 0) / 30.44 <= 42 THEN 6
+        WHEN COALESCE(a.dney, 0) / 30.44 <= 48 THEN 5
+        WHEN COALESCE(a.dney, 0) / 30.44 <= 54 THEN 4
+        WHEN COALESCE(a.dney, 0) / 30.44 <= 60 THEN 4
+        WHEN COALESCE(a.dney, 0) / 30.44 <= 66 THEN 3
+        WHEN COALESCE(a.dney, 0) / 30.44 <= 72 THEN 3
+        WHEN COALESCE(a.dney, 0) / 30.44 <= 78 THEN 2
+        WHEN COALESCE(a.dney, 0) / 30.44 <= 84 THEN 2
+        WHEN COALESCE(a.dney, 0) / 30.44 <= 90 THEN 2
+        WHEN COALESCE(a.dney, 0) / 30.44 <= 96 THEN 2
+        WHEN COALESCE(a.dney, 0) / 30.44 <= 102 THEN 2
+        WHEN COALESCE(a.dney, 0) / 30.44 <= 108 THEN 1
+        WHEN COALESCE(a.dney, 0) / 30.44 <= 114 THEN 1
+        WHEN COALESCE(a.dney, 0) / 30.44 <= 120 THEN 1
+        WHEN COALESCE(a.dney, 0) / 30.44 <= 126 THEN 1
+        WHEN COALESCE(a.dney, 0) / 30.44 <= 132 THEN 1
+        WHEN COALESCE(a.dney, 0) / 30.44 <= 138 THEN 1
+        WHEN COALESCE(a.dney, 0) / 30.44 <= 144 THEN 1
+        WHEN COALESCE(a.dney, 0) / 30.44 <= 150 THEN 1
+        WHEN COALESCE(a.dney, 0) / 30.44 <= 156 THEN 0
+        ELSE 0
+    END * 1.17, 2) as 'Srok_s_nami',
+    
+    round(CASE 
+    WHEN EXISTS (
+        SELECT 1 
+        FROM AlexeyReport.model_address_competitors mac
+        WHERE COALESCE(a.address, '') LIKE CONCAT('%', mac.address_without_kv, '%')
+    ) THEN 20.7
+    ELSE 0
+    END * 1.17, 2) as 'Conkurent',
+    
+    round(CASE 
+    WHEN COALESCE(tmp.age, 0) < 18 THEN 0
+    WHEN COALESCE(tmp.age, 0) <= 24 THEN 0.03
+    WHEN COALESCE(tmp.age, 0) <= 29 THEN 0.06
+    WHEN COALESCE(tmp.age, 0) <= 34 THEN 0.09
+    WHEN COALESCE(tmp.age, 0) <= 39 THEN 0.18
+    WHEN COALESCE(tmp.age, 0) <= 44 THEN 0.24
+    WHEN COALESCE(tmp.age, 0) <= 49 THEN 0.40
+    WHEN COALESCE(tmp.age, 0) <= 54 THEN 0.59
+    WHEN COALESCE(tmp.age, 0) <= 59 THEN 0.86
+    WHEN COALESCE(tmp.age, 0) <= 64 THEN 1.34
+    WHEN COALESCE(tmp.age, 0) <= 69 THEN 2.42
+    WHEN COALESCE(tmp.age, 0) <= 74 THEN 3
+    WHEN COALESCE(tmp.age, 0) <= 79 THEN 5.77
+    WHEN COALESCE(tmp.age, 0) <= 84 THEN 8.98
+    WHEN COALESCE(tmp.age, 0) <= 89 THEN 13.85
+    ELSE 0
+    END * 1.17, 2) as 'Age',
+    
+    -- Дополнительный коэффициент на основе тарифа и месяца
+    round(CASE 
+        WHEN (COALESCE(a.tariff, '') LIKE '%Wi-Fi Комната%'
+              OR COALESCE(a.tariff, '') LIKE '%Комната 100. Екатеринбург%'
+              OR COALESCE(a.tariff, '') LIKE '%Комната Wi-Fi 100. Екатеринбург%'
+              OR COALESCE(a.tariff, '') LIKE '%Комната. Екатеринбург%'
+              OR COALESCE(a.tariff, '') LIKE '%Студент 1. Екатеринбург%'
+              OR COALESCE(a.tariff, '') LIKE '%Студент 2. Екатеринбург%'
+              OR COALESCE(a.tariff, '') LIKE '%Студент 200 Премиум. Екатеринбург%'
+              OR COALESCE(a.tariff, '') LIKE '%Студент 200. Екатеринбург%'
+              OR COALESCE(a.tariff, '') LIKE '%Студент Базовый. Екатеринбург%')
+        THEN
+            CASE 
+                WHEN MONTH('2025-06-01') = 5 THEN 5   -- Май
+                WHEN MONTH('2025-06-01') = 2 THEN 10  -- Февраль
+                ELSE 0
+            END
+        ELSE 0
+    END * 1.17, 2) as 'Student',
+    
+    round(CASE 
+    WHEN pt.title IS NOT NULL THEN 
+        CASE MONTH('2025-06-01')
+            WHEN 1 THEN 4.685190766
+            WHEN 2 THEN 4.901640323
+            WHEN 3 THEN 4.636210244
+            WHEN 4 THEN 4.739254628
+            WHEN 5 THEN 4.715930206
+            WHEN 6 THEN 4.176248612
+            WHEN 7 THEN 5.979060053
+            WHEN 8 THEN 6.896236949
+            WHEN 9 THEN 8.84158718
+            WHEN 10 THEN 7.982682812
+            WHEN 11 THEN 4.978292164
+            WHEN 12 THEN 5.8
+            ELSE 0
+        END
+    ELSE 0
+    END * 1.17, 2) as 'Sezon_ottok',
+    
+    -- Дополнительный коэффициент для Рубцовска на определенные даты
+    round(CASE 
+    WHEN (
+        -- 1 октября 2025 (октябрь + ноябрь)
+        (CURRENT_DATE >= '2025-11-01' AND CURRENT_DATE < '2025-12-01')
+        OR 
+        -- 1 июня 2025 и город Рубцовск (июнь + июль)
+        (CURRENT_DATE >= '2025-07-01' AND CURRENT_DATE < '2025-08-01'
+         AND COALESCE(a.gorod, '') LIKE '%Рубцовск%')
+    ) THEN 20
+    ELSE 0
+    END * 1.17, 2) as 'Index',
+    
+    a.title,
+    -- Добавим индикаторы наличия данных для отладки
+    CASE WHEN s.ls IS NULL THEN 0 ELSE 1 END as has_serv,
+    CASE WHEN tmp.ls IS NULL THEN 0 ELSE 1 END as has_tmp,
+    COUNT(s.ls) as serv_count
+    
+FROM 
+    (SELECT * FROM AlexeyReport.aa1 
+     WHERE title like '2%' 
+       AND aa1.update_at >= '2025-06-01' 
+       AND aa1.update_at < '2025-06-01' + INTERVAL 1 DAY) as a
+    LEFT JOIN sitemanager.serv s ON a.title = s.ls
+    LEFT JOIN sitemanager.tmp_list as tmp on a.title = tmp.ls
+    LEFT JOIN paused_titles pt ON a.title = pt.title
+GROUP BY 
+    a.title, a.update_at, a.dney, a.address, a.tariff, a.gorod, 
+    s.ls, tmp.ls, tmp.age, pt.title
+ORDER BY 
+    a.title;
