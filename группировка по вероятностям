@@ -1,0 +1,61 @@
+WITH interval_data AS (
+    SELECT
+        CASE 
+            WHEN Total_Sum BETWEEN 0 AND 10 THEN '0-10'
+            WHEN Total_Sum BETWEEN 11 AND 20 THEN '11-20'
+            WHEN Total_Sum BETWEEN 21 AND 30 THEN '21-30'
+            WHEN Total_Sum BETWEEN 31 AND 40 THEN '31-40'
+            WHEN Total_Sum BETWEEN 41 AND 50 THEN '41-50'
+            WHEN Total_Sum BETWEEN 51 AND 60 THEN '51-60'
+            WHEN Total_Sum BETWEEN 61 AND 70 THEN '61-70'
+            WHEN Total_Sum BETWEEN 71 AND 80 THEN '71-80'
+            WHEN Total_Sum BETWEEN 81 AND 90 THEN '81-90'
+            WHEN Total_Sum BETWEEN 91 AND 100 THEN '91-100'
+            ELSE '100+'
+        END AS total_sum_interval,
+        COUNT(*) AS record_count,
+        SUM(ottok) AS total_ottok_sum
+    FROM model_testus_052025
+    WHERE Total_Sum > 0  -- Исключаем записи с Total_Sum = 0 или отрицательными
+    GROUP BY 
+        CASE 
+            WHEN Total_Sum BETWEEN 0 AND 10 THEN '0-10'
+            WHEN Total_Sum BETWEEN 11 AND 20 THEN '11-20'
+            WHEN Total_Sum BETWEEN 21 AND 30 THEN '21-30'
+            WHEN Total_Sum BETWEEN 31 AND 40 THEN '31-40'
+            WHEN Total_Sum BETWEEN 41 AND 50 THEN '41-50'
+            WHEN Total_Sum BETWEEN 51 AND 60 THEN '51-60'
+            WHEN Total_Sum BETWEEN 61 AND 70 THEN '61-70'
+            WHEN Total_Sum BETWEEN 71 AND 80 THEN '71-80'
+            WHEN Total_Sum BETWEEN 81 AND 90 THEN '81-90'
+            WHEN Total_Sum BETWEEN 91 AND 100 THEN '91-100'
+            ELSE '100+'
+        END
+),
+all_data AS (
+    SELECT 
+        '0-100 (Итого)' AS total_sum_interval,
+        COUNT(*) AS record_count,
+        SUM(ottok) AS total_ottok_sum
+    FROM model_testus_052025
+    WHERE Total_Sum > 0 AND Total_Sum <= 100  -- Исключаем записи с Total_Sum = 0 или отрицательными
+)
+SELECT 
+    total_sum_interval,
+    record_count,
+    total_ottok_sum,
+    REPLACE(ROUND(total_ottok_sum * 100.0 / NULLIF(record_count, 0), 2), '.', ',') AS ottok_ratio_percent
+FROM interval_data
+UNION ALL
+SELECT 
+    total_sum_interval,
+    record_count,
+    total_ottok_sum,
+    REPLACE(ROUND(total_ottok_sum * 100.0 / NULLIF(record_count, 0), 2), '.', ',') AS ottok_ratio_percent
+FROM all_data
+ORDER BY 
+    CASE 
+        WHEN total_sum_interval = '0-100 (Итого)' THEN 999
+        WHEN total_sum_interval = '100+' THEN 1000
+        ELSE CAST(SUBSTRING_INDEX(total_sum_interval, '-', 1) AS UNSIGNED)
+    END;
