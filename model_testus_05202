@@ -15,6 +15,7 @@ paused_titles AS (
           MONTH(s2.status_date) 
           AND 
           MONTH(DATE_ADD(s2.status_date, INTERVAL s2.dney DAY))
+AND YEAR(s2.status_date) = 2024
 )
 SELECT 
     round(CASE 
