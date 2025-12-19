@@ -1,12 +1,16 @@
 -- Отключить безопасный режим для текущей сессии
 SET SQL_SAFE_UPDATES = 0;
 
--- Выполнить ваш запрос
-UPDATE model_testus_062025 AS m
+-- 1. Сначала добавляем столбец ottok, если он еще не существует
+ALTER TABLE model_testus_072025 
+ADD COLUMN IF NOT EXISTS ottok TINYINT(1) DEFAULT 0;
+
+-- 2. Выполнить обновление данных
+UPDATE model_testus_072025 AS m
 JOIN (
     SELECT DISTINCT title
     FROM ottok1db
-    WHERE update_at1 >= '2025-07-01'
+    WHERE update_at1 >= '2025-08-01'
 ) AS o ON m.title = o.title
 SET m.ottok = 1;
 
